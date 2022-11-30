@@ -4,18 +4,23 @@ import recipeView from "./views/recipeViews.js";
 import "core-js/stable"; // polyfilling everything
 import "regenerator-runtime"; // polyfilling async await
 import { async } from "regenerator-runtime";
-// import { search } from "core-js/fn/symbol";
-import searchView from "./searchView.js";
+import searchView from "./views/searchView.js";
+import resultsView from "./views/resultsView.js";
+
+if (module.hot) module.hot.accept(); // Coming from Parcel
+
+//////////////////////////////////////
+//////////////////////////////////////
+//////////////////////////////////////
 
 const recipeContainer = document.querySelector(".recipe");
-
-///////////////////////////////////////
 
 // function to handle render of recipe data
 const controlRecipe = async function (El) {
   try {
     const id = window.location.hash.slice(1);
     if (!id) return;
+
     recipeView.renderSpinner();
 
     // 1 loading recipe
@@ -32,6 +37,8 @@ const controlRecipe = async function (El) {
 // function to handle user recipe search query
 const controllerSearchResults = async function () {
   try {
+    resultsView.renderSpinner();
+
     // 1. get results from API
     const query = searchView.getQuerry();
     if (!query) return;
@@ -39,8 +46,7 @@ const controllerSearchResults = async function () {
     await model.loadSearchResults(query); // mutate the object of state from model.js
 
     // 2. Render Results
-    console.log(model.state.search);
-    console.log(model.state.research);
+    resultsView.render(model.state.search.results);
   } catch (err) {
     console.error(`Warning from controller.js! ${err}`);
   }
