@@ -6,8 +6,9 @@ import "regenerator-runtime"; // polyfilling async await
 import { async } from "regenerator-runtime";
 import searchView from "./views/searchView.js";
 import resultsView from "./views/resultsView.js";
+import paginationView from "./views/paginationView.js";
 
-if (module.hot) module.hot.accept(); // Coming from Parcel
+// if (module.hot) module.hot.accept(); // Coming from Parcel
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -43,10 +44,14 @@ const controllerSearchResults = async function () {
     const query = searchView.getQuerry();
     if (!query) return;
 
+    // 2. Await results from server
     await model.loadSearchResults(query); // mutate the object of state from model.js
 
-    // 2. Render Results
-    resultsView.render(model.state.search.results);
+    // 3. Render Results
+    resultsView.render(model.getSearchResultsPage());
+
+    // 4.Render Pagination
+    paginationView.render(model.state.search);
   } catch (err) {
     console.error(`Warning from controller.js! ${err}`);
   }

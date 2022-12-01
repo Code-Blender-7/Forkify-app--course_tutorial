@@ -1,13 +1,16 @@
 import { async } from "regenerator-runtime";
-import { API_URL } from "./config";
 import { getJSON } from "./helper";
+import { API_URL } from "./config";
 import { API_KEY } from "./config";
+import { RES_PER_PAGE } from "./config";
 
 export const state = {
   recipe: {},
   search: {
     query: "", // search query from the user
     results: [], // results of the search query
+    resultsPerPage: RES_PER_PAGE,
+    page: 1, // default 1
   },
 };
 
@@ -53,4 +56,15 @@ export const loadSearchResults = async function (search_query) {
     console.error(`Warning from Model.js! ${err}`);
     throw err; // rethrow the error to the next importer
   }
+};
+
+export const getSearchResultsPage = function (page = state.search.page) {
+  /*
+  Logic. See logs 008 of development-logs. Section BASIC LOGIC
+  */
+
+  const start = (page - 1) * state.search.resultsPerPage; // 0
+  const end = page * state.search.resultsPerPage; // 9
+  console.log(start, end);
+  return state.search.results.slice(start, end);
 };

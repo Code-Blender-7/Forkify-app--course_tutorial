@@ -103,3 +103,11 @@ For searchView is where the user data is aquired from the query. For the resultV
 For these files that are involved, there are cases where they use the same function. For that, the option is create objects and extend them to a central parent element and acting as a inheritance. That is call the view.js
 
 This file is containing all the error messages, configs, and similarities that could happen to the resultViews and the searchViews.
+
+So?
+
+the file is called View.js and this is where the functions like the renderSpinner, renderError and renderSuccess is located. 
+
+Well, the name of the renderSuccess could be changed over time and let us look forward for that later on.
+
+View.js is of course used for the purpose of keeping the similar functions in order to reduce the number of code on each file objects and just inherit the parent objects to the child object.
