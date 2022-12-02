@@ -57,11 +57,22 @@ const controllerSearchResults = async function () {
   }
 };
 
+const controlPagination = function (goToPage) {
+  console.log("Pag Controller");
+  console.log(goToPage);
+
+  // 1. Render NEW RESULTS
+  resultsView.render(model.getSearchResultsPage(goToPage));
+  // 2. Render NEW BUTTONS
+  paginationView.render(model.state.search);
+};
+
 // Publisher-Subscriber Pattern
 // Calls the function here and not in the export file.
 const init = () => {
   recipeView.addHandlerRender(controlRecipe);
   searchView.addHandlerSaerchMethod(controllerSearchResults);
+  paginationView.addHandlerClick(controlPagination);
 };
 
 init();

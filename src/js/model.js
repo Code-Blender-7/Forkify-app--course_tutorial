@@ -62,6 +62,7 @@ export const getSearchResultsPage = function (page = state.search.page) {
   /*
   Logic. See logs 008 of development-logs. Section BASIC LOGIC
   */
+  state.search.page = page;
 
   const start = (page - 1) * state.search.resultsPerPage; // 0
   const end = page * state.search.resultsPerPage; // 9
