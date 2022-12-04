@@ -131,6 +131,7 @@
     width: 100%;
     fill: $color-primary;
     transition: all 0.3s;
+    cursor: pointer
   }
 
   &:focus {
@@ -150,6 +151,14 @@
   &:not(:last-child) {
     margin-right: 0.3rem;
   }
+}
+
+.btn--tiny:disabled {
+  pointer-events: none;
+}
+
+.btn--tiny.enabled {
+  pointer-events: auto;
 }
 
 .heading--2 {
