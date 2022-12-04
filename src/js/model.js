@@ -1,8 +1,6 @@
 import { async } from "regenerator-runtime";
 import { getJSON } from "./helper";
-import { API_URL } from "./config";
-import { API_KEY } from "./config";
-import { RES_PER_PAGE } from "./config";
+import { RES_PER_PAGE, API_KEY, API_URL } from "./config";
 
 export const state = {
   recipe: {},
@@ -15,6 +13,10 @@ export const state = {
 };
 
 export const loadRecipe = async function (id) {
+  /*
+  get details on the recipe. Takes an id and updates/mutates state object on model.js
+  */
+
   try {
     const data = await getJSON(`${API_URL}/${id}`);
     let { recipe } = data.data;
@@ -35,9 +37,13 @@ export const loadRecipe = async function (id) {
   }
 };
 
-// loads the search results. takes a string of recipe name.
-// "requests" from API to fetch results.
 export const loadSearchResults = async function (search_query) {
+  /*
+  Provides info for the rendering of the recipe query result list.
+  Updates/mutates state from model.js for additional 
+  Requests data from server.
+  */
+
   try {
     const data = await getJSON(
       `${API_URL}?search=${search_query}&key=${API_KEY}`
@@ -60,12 +66,25 @@ export const loadSearchResults = async function (search_query) {
 
 export const getSearchResultsPage = function (page = state.search.page) {
   /*
-  Logic. See logs 008 of development-logs. Section BASIC LOGIC
+  Creates paging for the site.
+  returns values to update state on model.js
+  Pagination Logic. See logs 008 of development-logs. Section BASIC LOGIC
   */
-  state.search.page = page;
 
+  state.search.page = page;
   const start = (page - 1) * state.search.resultsPerPage; // 0
   const end = page * state.search.resultsPerPage; // 9
   console.log(start, end);
   return state.search.results.slice(start, end);
+};
+
+export const updateServings = function (newServingsAmount) {
+  /*
+   */
+  console.log(state.recipe);
+  state.recipe.ingredients.forEach((ing) => {
+    ing.quantity = (ing.quantity * newServingsAmount) / state.recipe.servings;
+  });
+
+  state.recipe.servings = newServingsAmount;
 };

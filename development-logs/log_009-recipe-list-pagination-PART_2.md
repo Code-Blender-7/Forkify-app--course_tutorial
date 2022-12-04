@@ -146,3 +146,33 @@ The logic is that the markup have their own page numbers and after that, we will
 
 Therefore, the page will be rendered over the recipe search results whenever the user clicks the page pagination.
 
+Because that we already had created the basic idea of rendering, we just need to call the render functions everytime the page paginates.
+
+Using the addHandlerClick that acts as as the publisher of the pattern, we be sending a argument value of page number to the controller.
+
+Then, we make the code work.
+
+```
+const controlPagination = function (goToPage) {
+
+  // 1. Render NEW RESULTS
+  resultsView.render(model.getSearchResultsPage(goToPage));
+  // 2. Render NEW BUTTONS
+  paginationView.render(model.state.search);
+};
+
+```
+
+Be sure to initialize it~
+
+```
+// snip
+const init = () => {
+  // snip
+  paginationView.addHandlerClick(controlPagination);
+};
+
+init();
+
+
+```
