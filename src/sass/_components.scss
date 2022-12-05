@@ -153,13 +153,11 @@
   }
 }
 
-.btn--tiny:disabled {
+.btn--tiny.disabled {
   pointer-events: none;
+  opacity: 0.5;
 }
 
-.btn--tiny.enabled {
-  pointer-events: auto;
-}
 
 .heading--2 {
   font-size: 2rem;

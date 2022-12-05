@@ -22,7 +22,18 @@ class RecipeView extends View {
     });
   }
 
+  _generateLimiter() {
+    this._parentElement.addEventListener("click", function (e) {
+      const btn = e.target.closest(".btn--tiny");
+      if (!btn) return;
+
+      const updateTo = +btn.dataset.updateTo;
+      if (updateTo === 0) btn.classList.add("disabled");
+    });
+  }
+
   _generateMarkup() {
+    this._generateLimiter();
     return `  
       <figure class="recipe__fig">
         <img src="${this._data.image}" alt="Tomato" class="recipe__img" />
@@ -58,9 +69,9 @@ class RecipeView extends View {
                 <use href="${icons}#icon-plus-circle"></use>
               </svg>
             </button>
-            <button class="btn--tiny btn--decrease-servings" ${
-              this._data.servings === 1 ? "disabled" : "enabled"
-            } data-update-To="${this._data.servings - 1}">
+            <button class="btn--tiny btn--decrease-servings"  data-update-To="${
+              this._data.servings - 1
+            }">
               <svg>
                 <use href="${icons}#icon-minus-circle"></use>
               </svg>
