@@ -2,19 +2,53 @@ import icons from "url:../../img/icons.svg";
 
 export default class View {
   _data;
+  // inject new HTML to render
   render(data) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
-    this._data = data; // stores API data as a object variable property
+    // stores API data as a object variable property
+    this._data = data;
     this._clear();
     this._parentElement.insertAdjacentHTML(
       "afterbegin",
       this._generateMarkup()
-    ); // inject new HTML to render
+    );
   }
 
   _clear() {
-    this._parentElement.innerHTML = ""; // clear HTML
+    // clear HTML
+    this._parentElement.innerHTML = "";
+  }
+
+  update(data) {
+    this._data = data;
+    const newMarkup = this._generateMarkup();
+
+    // virtual DOM
+    const newDOM = document.createRange().createContextualFragment(newMarkup);
+    const newElements = Array.from(newDOM.querySelectorAll("*"));
+
+    // current DOM
+    const curElements = Array.from(this._parentElement.querySelectorAll("*"));
+
+    newElements.forEach((newEl, i) => {
+      const curEl = curElements[i];
+
+      if (
+        // if the virtual element is not equal to the current element AND virtual element nodeValue of text is not empty:
+        !newEl.isEqualNode(curEl) &&
+        newEl.firstChild?.nodeValue.trim() !== ""
+      ) {
+        // console.log(newEl.firstChild.nodeValue.trim());
+        curEl.textContent = newEl.textContent;
+      }
+
+      // update changed attributes
+      if (!newEl.isEqualNode(curEl))
+        Array.from(newEl.attributes).forEach((attr) =>
+          curEl.setAttribute(attr.name, attr.value)
+        );
+    });
   }
 
   // render the Error message

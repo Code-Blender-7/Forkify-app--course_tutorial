@@ -7,7 +7,6 @@ import searchView from "./views/searchView.js";
 import resultsView from "./views/resultsView.js";
 import paginationView from "./views/paginationView.js";
 import recipeView from "./views/recipeViews.js";
-// if (module.hot) module.hot.accept(); // Coming from Parcel
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -26,6 +25,9 @@ const controlRecipe = async function (El) {
     if (!id) return;
 
     recipeView.renderSpinner();
+
+    // 0. Update results view
+    resultsView.update(model.getSearchResultsPage());
 
     // 1 loading recipe from server
     await model.loadRecipe(id);
