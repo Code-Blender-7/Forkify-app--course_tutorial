@@ -91,6 +91,12 @@ const controlServings = function (newServingsAmount) {
   recipeView.update(model.state.recipe);
 };
 
+const controlAddBookmark = function () {
+  model.addBookmark(model.state.recipe);
+  console.log("Bookmarked:", model.state.bookmark);
+  recipeView.update(model.state.recipe);
+};
+
 /////
 /////
 // Publisher-Subscriber Pattern
@@ -102,6 +108,7 @@ const init = () => {
   recipeView.addHandlerRender(controlRecipe); // handle recipe details rendering
   recipeView.addHandlerUpdateServings(controlServings); // handle recipe servings update rendering
   searchView.addHandlerSaerchMethod(controllerSearchResults); // handle recipe search query
+  recipeView.addHandlerAddBookmark(controlAddBookmark);
   paginationView.addHandlerClick(controlPagination); // handle web page pagination
 };
 

@@ -18,22 +18,20 @@ class RecipeView extends View {
       if (!btn) return;
 
       const updateTo = +btn.dataset.updateTo;
+
       handler(updateTo); // call the argument as a function to whoever uses it.
     });
   }
 
-  _generateLimiter() {
+  addHandlerAddBookmark(handler) {
     this._parentElement.addEventListener("click", function (e) {
-      const btn = e.target.closest(".btn--tiny");
+      const btn = e.target.closest(".btn--bookmark");
       if (!btn) return;
-
-      const updateTo = +btn.dataset.updateTo;
-      if (updateTo === 0) btn.classList.add("disabled");
+      handler();
     });
   }
 
   _generateMarkup() {
-    this._generateLimiter();
     return `  
       <figure class="recipe__fig">
         <img src="${this._data.image}" alt="Tomato" class="recipe__img" />
@@ -69,9 +67,9 @@ class RecipeView extends View {
                 <use href="${icons}#icon-plus-circle"></use>
               </svg>
             </button>
-            <button class="btn--tiny btn--decrease-servings"  data-update-To="${
-              this._data.servings - 1
-            }">
+            <button class="btn--tiny btn--decrease-servings ${
+              this._data.servings === 1 ? "disabled" : ""
+            }"  data-update-To="${this._data.servings - 1}">
               <svg>
                 <use href="${icons}#icon-minus-circle"></use>
               </svg>
@@ -82,9 +80,11 @@ class RecipeView extends View {
 
         <div class="recipe__user-generated">
         </div>
-        <button class="btn--round">
+        <button class="btn--round btn--bookmark">
           <svg class="">
-            <use href="${icons}#icon-bookmark-fill"></use>
+            <use href="${icons}#icon-bookmark${
+      this._data.bookmarked ? "-fill" : ""
+    }"></use>
           </svg>
         </button>
       </div>

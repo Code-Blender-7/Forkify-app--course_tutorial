@@ -10,6 +10,7 @@ export const state = {
     resultsPerPage: RES_PER_PAGE,
     page: 1, // default 1
   },
+  bookmark: [],
 };
 
 export const loadRecipe = async function (id) {
@@ -31,6 +32,7 @@ export const loadRecipe = async function (id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
+    state.search.page = 1; // set page to 1 [by force]
   } catch (err) {
     console.error(`Warning from Model.js! ${err}`);
     throw err; // rethrow the error to the next importer
@@ -79,10 +81,20 @@ export const getSearchResultsPage = function (page = state.search.page) {
 
 export const updateServings = function (newServingsAmount) {
   /*
+  UPDATE servings. requires int to increment to.
    */
   state.recipe.ingredients.forEach((ing) => {
     ing.quantity = (ing.quantity * newServingsAmount) / state.recipe.servings;
   });
 
   state.recipe.servings = newServingsAmount;
+};
+
+export const addBookmark = function (recipe) {
+  // add bookmark
+
+  state.bookmark.push(recipe);
+
+  // mark current recipe as bookmark
+  if (recipe.id == state.recipe.id) state.recipe.bookmarked = true;
 };
