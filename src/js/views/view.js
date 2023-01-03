@@ -6,9 +6,9 @@ export default class View {
   render(data) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
-    // stores API data as a object variable property
-    this._data = data;
-    this._clear();
+
+    this._data = data; // stores API data as a object variable property
+    this._clear(); // clear data as a refresh
     this._parentElement.insertAdjacentHTML(
       "afterbegin",
       this._generateMarkup()

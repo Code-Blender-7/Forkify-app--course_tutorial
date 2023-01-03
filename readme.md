@@ -23,6 +23,10 @@ launch from npm scripts if you installed the dependencies
 npm start
 ```
 
+To do~
+1. Addon of Minutes and Seconds in the servings. (recipeView.js)
+
+
 ### Credits
 
 Original : Jonas 

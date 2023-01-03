@@ -79,6 +79,11 @@
     &:not(:last-child) {
       margin-right: 4.5rem;
     }
+
+  }
+
+  &__info-normal {
+    text-transform: none;
   }
 
   &__info-icon {
@@ -177,3 +182,4 @@
     font-weight: 700;
   }
 }
+

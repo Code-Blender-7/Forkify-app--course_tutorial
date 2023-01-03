@@ -45,10 +45,7 @@ class RecipeView extends View {
           <svg class="recipe__info-icon">
             <use href="${icons}#icon-clock"></use>
           </svg>
-          <span class="recipe__info-data recipe__info-data--minutes">${
-            this._data.cookingTime
-          }</span>
-          <span class="recipe__info-text">minutes</span>
+            ${this._generateCookingTime(this._data.cookingTime)}
         </div>
         <div class="recipe__info">
           <svg class="recipe__info-icon">
@@ -136,6 +133,14 @@ class RecipeView extends View {
       ${ing.description}
     </div>
   </li>    
+  `;
+  }
+
+  // Adding custom cooking time markup
+  _generateCookingTime(totalMinutes) {
+    return `
+    <span class="recipe__info-data recipe__info-data--minutes">${totalMinutes}</span>
+    <span class="recipe__info-text">minutes</span>
   `;
   }
 }

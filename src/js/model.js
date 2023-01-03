@@ -10,13 +10,11 @@ export const state = {
     resultsPerPage: RES_PER_PAGE,
     page: 1, // default 1
   },
-  bookmark: [],
+  bookmarks: [],
 };
 
 export const loadRecipe = async function (id) {
-  /*
-  get details on the recipe. Takes an id and updates/mutates state object on model.js
-  */
+  // Recipe Dataclass update + other features
 
   try {
     const data = await getJSON(`${API_URL}/${id}`);
@@ -32,18 +30,23 @@ export const loadRecipe = async function (id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
-    state.search.page = 1; // set page to 1 [by force]
+
+    // ensure that bookmark icon stays even if recipe view is changed
+    if (state.bookmarks.some((bookmark) => bookmark.id === id))
+      state.recipe.bookmarked = true;
+    else state.recipe.bookmarked = false;
+
+    state.search.page = 1; // set page to 1 if page reloads
   } catch (err) {
-    console.error(`Warning from Model.js! ${err}`);
+    console.error(`Warning from Model.js in requesting recipe details! ${err}`);
     throw err; // rethrow the error to the next importer
   }
 };
 
 export const loadSearchResults = async function (search_query) {
   /*
-  Provides info for the rendering of the recipe query result list.
-  Updates/mutates state from model.js for additional 
-  Requests data from server.
+  GET parsed json data from the API
+  updates state.recipe
   */
 
   try {
@@ -61,7 +64,7 @@ export const loadSearchResults = async function (search_query) {
       };
     });
   } catch (err) {
-    console.error(`Warning from Model.js! ${err}`);
+    console.error(`Warning from Model.js in requesting search results! ${err}`);
     throw err; // rethrow the error to the next importer
   }
 };
@@ -83,17 +86,22 @@ export const updateServings = function (newServingsAmount) {
   /*
   UPDATE servings. requires int to increment to.
    */
+
+  // update ingredients + calculate amount
   state.recipe.ingredients.forEach((ing) => {
     ing.quantity = (ing.quantity * newServingsAmount) / state.recipe.servings;
   });
+
+  // update cooking time
+  state.recipe.cookingTime =
+    (state.recipe.cookingTime / state.recipe.servings) * newServingsAmount;
 
   state.recipe.servings = newServingsAmount;
 };
 
 export const addBookmark = function (recipe) {
   // add bookmark
-
-  state.bookmark.push(recipe);
+  state.bookmarks.push(recipe);
 
   // mark current recipe as bookmark
   if (recipe.id == state.recipe.id) state.recipe.bookmarked = true;

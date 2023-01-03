@@ -36,7 +36,7 @@ const controlRecipe = async function (El) {
     recipeView.render(model.state.recipe);
   } catch (err) {
     console.error(`Warning from controller.js! ${err}`);
-    recipeView.renderError();
+    recipeView.renderError("Please check your internet");
   }
 };
 
@@ -64,6 +64,7 @@ const controllerSearchResults = async function () {
     paginationView.render(model.state.search);
   } catch (err) {
     console.error(`Warning from controller.js! ${err}`);
+    recipeView.renderError("Please check your internet");
   }
 };
 
@@ -93,7 +94,7 @@ const controlServings = function (newServingsAmount) {
 
 const controlAddBookmark = function () {
   model.addBookmark(model.state.recipe);
-  console.log("Bookmarked:", model.state.bookmark);
+  console.log("Bookmarked:", model.state.bookmarks);
   recipeView.update(model.state.recipe);
 };
 
