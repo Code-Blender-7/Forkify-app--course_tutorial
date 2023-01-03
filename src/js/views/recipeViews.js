@@ -137,11 +137,19 @@ class RecipeView extends View {
   }
 
   // Adding custom cooking time markup
+  // See log 13 for more details
   _generateCookingTime(totalMinutes) {
+    const hours = Math.trunc(totalMinutes / 60);
+    const minutes = +(totalMinutes % 60).toFixed();
+    const hoursString = hours > 1 ? "hours" : "hour";
+    const minutesString = minutes > 1 ? "minutes" : "minutes";
+
     return `
-    <span class="recipe__info-data recipe__info-data--minutes">${totalMinutes}</span>
-    <span class="recipe__info-text">minutes</span>
-  `;
+      <span class="recipe__info-data recipe__info-data--hours">${hours}</span>
+      <span class="recipe__info-text">${hoursString}</span>
+      <span class="recipe__info-data recipe__info-data--minutes">${minutes}</span>
+      <span class="recipe__info-text">${minutesString}</span>
+      `;
   }
 }
 // set export to default to allow import without *
