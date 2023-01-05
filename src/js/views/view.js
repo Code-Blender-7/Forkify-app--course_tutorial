@@ -3,16 +3,15 @@ import icons from "url:../../img/icons.svg";
 export default class View {
   _data;
   // inject new HTML to render
-  render(data) {
+  render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
 
     this._data = data; // stores API data as a object variable property
+    const markup = this._generateMarkup();
+    if (!render) return markup;
     this._clear(); // clear data as a refresh
-    this._parentElement.insertAdjacentHTML(
-      "afterbegin",
-      this._generateMarkup()
-    );
+    this._parentElement.insertAdjacentHTML("afterbegin", markup);
   }
 
   _clear() {
@@ -39,7 +38,6 @@ export default class View {
         !newEl.isEqualNode(curEl) &&
         newEl.firstChild?.nodeValue.trim() !== ""
       ) {
-        // console.log(newEl.firstChild.nodeValue.trim());
         curEl.textContent = newEl.textContent;
       }
 
@@ -70,7 +68,7 @@ export default class View {
 
   // render the default message
   renderMessage(message = this._successMessage) {
-    const error_markup = ` 
+    const messageMarkup = ` 
       <div class="message">
         <div>
           <svg>
@@ -82,7 +80,7 @@ export default class View {
       `;
 
     this._clear();
-    this._parentElement.insertAdjacentHTML("afterbegin", error_markup);
+    this._parentElement.insertAdjacentHTML("afterbegin", messageMarkup);
   }
 
   renderSpinner = function () {
