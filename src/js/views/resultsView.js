@@ -8,7 +8,7 @@ import View from "./view.js";
 
 class resultsView extends View {
   _parentElement = document.querySelector(".results");
-  _errorMessage = "The recipe was not found for your recipe. Please try again.";
+  _errorMessage = "The recipe was not found in your search. Please try again.";
   _successMessage = "...";
   _generateMarkup() {
     return this._data

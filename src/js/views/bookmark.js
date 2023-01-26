@@ -8,8 +8,12 @@ import View from "./view.js";
 
 class bookmarksView extends View {
   _parentElement = document.querySelector(".bookmarks__list");
-  _successMessage = "No bookmarks yet.";
   _errorMessage = "No bookmarks yet.";
+
+  addHandlerRender(handler) {
+    window.addEventListener("load", handler);
+  }
+
   _generateMarkup() {
     return this._data
       .map((bookmark) => previewView.render(bookmark, false))

@@ -29,14 +29,17 @@ const controlRecipe = async function (El) {
 
     // 0. Update results view
     resultsView.update(model.getSearchResultsPage());
-    bookmarksView.update(model.state.bookmarks);
 
     // 1 loading recipe from server
     await model.loadRecipe(id);
 
     // 2 rendering recipe
     recipeView.render(model.state.recipe);
+
+    // 3. Update Bookmarks
+    bookmarksView.update(model.state.bookmarks);
   } catch (err) {
+    recipeView.renderError();
     console.error(`Warning from controller.js! ${err}`);
   }
 };
@@ -64,6 +67,7 @@ const controllerSearchResults = async function () {
     // 4. RENDER Pagination
     paginationView.render(model.state.search);
   } catch (err) {
+    resultsView.renderError("Something Went Wrong. Let's Try Again.");
     console.error(`Warning from controller.js! ${err}`);
   }
 };
@@ -106,6 +110,10 @@ const controlAddBookmark = function () {
   bookmarksView.render(model.state.bookmarks);
 };
 
+const controlBookmarks = function () {
+  bookmarksView.render(model.state.bookmarks);
+};
+
 /////
 /////
 // Publisher-Subscriber Pattern
@@ -114,6 +122,7 @@ const init = () => {
   /*
   function init acts as the subscriber of the Publisher-Subscriber Pattern
   */
+  bookmarksView.addHandlerRender(controlBookmarks);
   recipeView.addHandlerRender(controlRecipe); // handle recipe details rendering
   recipeView.addHandlerUpdateServings(controlServings); // handle recipe servings update rendering
   searchView.addHandlerSaerchMethod(controllerSearchResults); // handle recipe search query

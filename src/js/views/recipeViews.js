@@ -4,6 +4,7 @@ import View from "./view.js";
 
 class RecipeView extends View {
   _parentElement = document.querySelector(".recipe");
+  _errorMessage = "Something went wrong while loading the Recipe";
 
   // Publisher-Subscriber Pattern => Subscriber
   addHandlerRender(handler) {
