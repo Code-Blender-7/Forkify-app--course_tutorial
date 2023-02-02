@@ -8,6 +8,7 @@ import resultsView from "./views/resultsView.js";
 import paginationView from "./views/paginationView.js";
 import recipeView from "./views/recipeViews.js";
 import bookmarksView from "./views/bookmark.js";
+import addRecipeView from "./views/addRecipeView.js";
 
 //////////////////////////////////////
 //////////////////////////////////////
@@ -39,7 +40,8 @@ const controlRecipe = async function (El) {
     // 3. Update Bookmarks
     bookmarksView.update(model.state.bookmarks);
   } catch (err) {
-    recipeView.renderError();
+    if (err.message == "Failed to fetch")
+      recipeView.renderError("Please check your internet Connection");
     console.error(`Warning from controller.js! ${err}`);
   }
 };
@@ -67,7 +69,8 @@ const controllerSearchResults = async function () {
     // 4. RENDER Pagination
     paginationView.render(model.state.search);
   } catch (err) {
-    resultsView.renderError("Something Went Wrong. Let's Try Again.");
+    if (err.message == "Failed to fetch")
+      resultsView.renderError("Please check your internet Connection");
     console.error(`Warning from controller.js! ${err}`);
   }
 };
@@ -114,6 +117,10 @@ const controlBookmarks = function () {
   bookmarksView.render(model.state.bookmarks);
 };
 
+const controlAddRecipe = function (newRecipeData) {
+  console.log(newRecipeData);
+};
+
 /////
 /////
 // Publisher-Subscriber Pattern
@@ -128,6 +135,7 @@ const init = () => {
   searchView.addHandlerSaerchMethod(controllerSearchResults); // handle recipe search query
   recipeView.addHandlerAddBookmark(controlAddBookmark);
   paginationView.addHandlerClick(controlPagination); // handle web page pagination
+  addRecipeView.addUploadRecipeData(controlAddRecipe);
 };
 
 init();
