@@ -7,17 +7,21 @@ export const state = {
   search: {
     query: "", // search query from the user
     results: [], // results of the search query
-    resultsPerPage: RES_PER_PAGE,
+    resultsPerPage: RES_PER_PAGE, // results per page
     page: 1, // default 1
   },
-  bookmarks: [],
+  bookmarks: [], // Recipe Bookmarks of the user
 };
 
 export const loadRecipe = async function (id) {
-  // Recipe Dataclass update + other features
+  /*
+  Recipe Dataclass update + other features
+  Updates the current recipe that the user wants to view
+  Updates the bookmarks of the recipe
+  */
 
   try {
-    const data = await getJSON(`${API_URL}/${id}`);
+    const data = await getJSON(`${API_URL}/${id}`); // wait for the fetch to get data
     let { recipe } = data.data;
 
     state.recipe = {
@@ -31,7 +35,7 @@ export const loadRecipe = async function (id) {
       ingredients: recipe.ingredients,
     };
 
-    // ensure that bookmark icon stays even if recipe view is changed
+    // ensure that bookmark icon stays even if recipe view is changed or refreshed
     if (state.bookmarks.some((bookmark) => bookmark.id === id))
       state.recipe.bookmarked = true;
     else state.recipe.bookmarked = false;
@@ -84,7 +88,8 @@ export const getSearchResultsPage = function (page = state.search.page) {
 
 export const updateServings = function (newServingsAmount) {
   /*
-  UPDATE servings. requires int to increment to.
+  UPDATES servings, ingredients and cooking time of the recipe in the recipe View
+  Requires int argument
    */
 
   // update ingredients + calculate amount
@@ -96,11 +101,15 @@ export const updateServings = function (newServingsAmount) {
   state.recipe.cookingTime =
     (state.recipe.cookingTime / state.recipe.servings) * newServingsAmount;
 
+  // update new recipe servings to the model state
   state.recipe.servings = newServingsAmount;
 };
 
 const persistBookMarks = function () {
-  // add bookmarks to the local storage
+  /*
+  save bookmark to the localStorage even if the website is refreshed
+  */
+
   localStorage.setItem("bookmarks", JSON.stringify(state.bookmarks));
 };
 
@@ -123,18 +132,17 @@ export const removeBookmark = function (id) {
   persistBookMarks();
 };
 
-const init = function () {
-  // Adds the bookmarks to the local Storage
-  const storage = localStorage.getItem("bookmarks");
-  if (storage) state.bookmarks = JSON.parse(storage);
-};
-
 const clearBookmarks = function () {
-  // clear all the bookmarks
+  /*
+  clear all the bookmarks
+  enabling it will remove all bookmarks from localStorage
+  */
+
   localStorage.clear("bookmarks");
 };
 
 export const uploadRecipe = async function (newRecipe) {
+  // filter recipe ingredients from the upload Recipe
   const ingredients = Object.entries(newRecipe)
     .filter((entry) => entry[0].startsWith("ingredient") && entry[1] !== "")
     .map((ing) => {
@@ -143,9 +151,19 @@ export const uploadRecipe = async function (newRecipe) {
         throw new Error("Wrong Ingredient Format. Please try again");
 
       const [quantity, unit, description] = ingArr;
-      return { quantity: quantity ? +quantity : null, unit, description };
+      return {
+        quantity: quantity ? +quantity : null, // return Null if quantiy is not a integer
+        unit,
+        description,
+      };
     });
   console.log(ingredients);
+};
+
+const init = function () {
+  // Adds the bookmarks to the local Storage
+  const storage = localStorage.getItem("bookmarks");
+  if (storage) state.bookmarks = JSON.parse(storage);
 };
 
 // clearBookmarks();
