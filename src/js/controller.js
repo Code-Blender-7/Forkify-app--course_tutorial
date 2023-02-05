@@ -1,6 +1,7 @@
 import * as model from "./model.js";
 import "core-js/stable"; // polyfilling everything
 import "regenerator-runtime"; // polyfilling async await
+import { OVERLAY_TIMEOUT } from "./config.js";
 import { async } from "regenerator-runtime";
 
 import searchView from "./views/searchView.js";
@@ -119,7 +120,22 @@ const controlBookmarks = function () {
 
 const controlAddRecipe = async function (newRecipeData) {
   try {
+    // render Loading Spinner
+    addRecipeView.renderSpinner();
+
     await model.uploadRecipe(newRecipeData); // wait for model.uploadData to be completed.
+    console.log(model.state.recipe);
+
+    // Render Success Message
+    addRecipeView.renderMessage();
+
+    // render added recipe
+    recipeView.render(model.state.recipe);
+
+    // Close Form window
+    setTimeout(function () {
+      addRecipeView.toggleWindow();
+    }, OVERLAY_TIMEOUT);
   } catch (err) {
     console.error(err);
     addRecipeView.renderError(err.message);
