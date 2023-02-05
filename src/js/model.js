@@ -1,5 +1,5 @@
 import { async } from "regenerator-runtime";
-import { getJSON } from "./helper";
+import { getJSON, sendJSON } from "./helper";
 import { RES_PER_PAGE, API_KEY, API_URL } from "./config";
 
 export const state = {
@@ -143,21 +143,36 @@ const clearBookmarks = function () {
 
 export const uploadRecipe = async function (newRecipe) {
   // filter recipe ingredients from the upload Recipe
-  const ingredients = Object.entries(newRecipe)
-    .filter((entry) => entry[0].startsWith("ingredient") && entry[1] !== "")
-    .map((ing) => {
-      const ingArr = ing[1].replaceAll(" ", "").split("");
-      if (ingArr.length !== 3)
-        throw new Error("Wrong Ingredient Format. Please try again");
+  try {
+    const ingredients = Object.entries(newRecipe)
+      .filter((entry) => entry[0].startsWith("ingredient") && entry[1] !== "")
+      .map((ing) => {
+        const ingArr = ing[1].replaceAll(" ", "").split(",");
+        if (ingArr.length !== 3)
+          throw new Error("Wrong Ingredient Format. Please try again");
+        const [quantity, unit, description] = ingArr;
+        return {
+          quantity: quantity ? +quantity : null, // return Null if quantiy is not a integer
+          unit,
+          description,
+        };
+      });
 
-      const [quantity, unit, description] = ingArr;
-      return {
-        quantity: quantity ? +quantity : null, // return Null if quantiy is not a integer
-        unit,
-        description,
-      };
-    });
-  console.log(ingredients);
+    const recipe = {
+      title: newRecipe.title,
+      publisher: newRecipe.publisher,
+      source_url: newRecipe.sourceUrl,
+      image_url: newRecipe.image,
+      servings: newRecipe.servings,
+      cooking_time: +newRecipe.cookingTime,
+      ingredients,
+    };
+
+    const data = await sendJSON(`${API_URL}?key=${API_KEY}`, recipe);
+    console.log(data);
+  } catch (err) {
+    throw err;
+  }
 };
 
 const init = function () {
