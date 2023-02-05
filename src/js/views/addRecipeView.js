@@ -44,8 +44,6 @@ class AddRecipeView extends View {
     this._addHandlerShowWindow();
     this._addHandlerHideWindow();
   }
-
-  _generateMarkup() {}
 }
 
 export default new AddRecipeView();

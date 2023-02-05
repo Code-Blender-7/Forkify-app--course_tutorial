@@ -1,5 +1,5 @@
 import { async } from "regenerator-runtime";
-import { getJSON, sendJSON } from "./helper";
+import { AJAX } from "./helper";
 import { RES_PER_PAGE, API_KEY, API_URL } from "./config";
 
 const createRecipeObject = function (data) {
@@ -36,7 +36,7 @@ export const loadRecipe = async function (id) {
   */
 
   try {
-    const data = await getJSON(`${API_URL}/${id}`); // wait for the fetch to get data
+    const data = await AJAX(`${API_URL}/${id}?key=${API_KEY}`); // wait for the fetch to get data
     let { recipe } = data.data;
 
     state.recipe = createRecipeObject(data);
@@ -60,9 +60,7 @@ export const loadSearchResults = async function (search_query) {
   */
 
   try {
-    const data = await getJSON(
-      `${API_URL}?search=${search_query}&key=${API_KEY}`
-    );
+    const data = await AJAX(`${API_URL}?search=${search_query}&key=${API_KEY}`);
     state.search.query = search_query;
     state.search.results = data.data.recipes.map((rec) => {
       return {
@@ -71,6 +69,7 @@ export const loadSearchResults = async function (search_query) {
         publisher: rec.publisher,
         sourceUrl: rec.source_url,
         image: rec.image_url,
+        ...(rec.key && { key: rec.key }),
       };
     });
   } catch (err) {
@@ -152,7 +151,7 @@ export const uploadRecipe = async function (newRecipe) {
     const ingredients = Object.entries(newRecipe)
       .filter((entry) => entry[0].startsWith("ingredient") && entry[1] !== "")
       .map((ing) => {
-        const ingArr = ing[1].replaceAll(" ", "").split(",");
+        const ingArr = ing[1].split(",").map((el) => el.trim());
         if (ingArr.length !== 3)
           throw new Error("Wrong Ingredient Format. Please try again");
         const [quantity, unit, description] = ingArr;
@@ -168,12 +167,12 @@ export const uploadRecipe = async function (newRecipe) {
       publisher: newRecipe.publisher,
       source_url: newRecipe.sourceUrl,
       image_url: newRecipe.image,
-      servings: newRecipe.servings,
+      servings: +newRecipe.servings,
       cooking_time: +newRecipe.cookingTime,
       ingredients,
     };
 
-    const data = await sendJSON(`${API_URL}?key=${API_KEY}`, recipe);
+    const data = await AJAX(`${API_URL}?key=${API_KEY}`, (uploadData = recipe));
     state.recipe = createRecipeObject(data); // add to state
     addBookmark(state.recipe); // add to bookmark
   } catch (err) {
