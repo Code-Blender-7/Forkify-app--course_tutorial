@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "parcel index.html",
-    "build": "parcel build index.html --dist-dir ./dist"
+    "build": "parcel build index.html --no-scope-hoist"
   },
   "author": "foxtbird (@Black_2_white)",
   "license": "ISC",
