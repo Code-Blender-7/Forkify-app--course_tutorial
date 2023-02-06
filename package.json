@@ -3,11 +3,11 @@
   "__comment": "This is the package management file of the project. Please note that the version of the packages used in the course are used here. I am not the author of this project. I am a student of this course. All credits goes to Jonas. The modifications beside the original course route on this project will be included by me.",
   "version": "1.0.0",
   "description": "Recipe Application. Original by Jonas Schedtmann",
-  "main": "index.js",
+  "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "parcel index.html",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html --dist-dir ./dist"
   },
   "author": "foxtbird (@Black_2_white)",
   "license": "ISC",
