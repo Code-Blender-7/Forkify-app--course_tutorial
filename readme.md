@@ -1,14 +1,17 @@
-# Forkify-app
+<div>
+    <img src="https://img.shields.io/badge/Stable-Project%20is%20Stable%20to%20use-white?labelColor=90EE90&style=flat" alt="Stable" />
+</div>
+
+# Forkify: Your Recipe Searcher
+
 
 ## Introduction
 
----
+Forkify is a modern recipe searching wesbite where you can find the instructions of your favorite recipe. 
 
-This repo is under built....
+Forkify is created by Jonas As part of his udemy course. I am a student over this course who built this website.    
 
-All contents are subject to change over time.
 
----
 
 
 install the dependencies via npm
